@@ -1,7 +1,7 @@
 # GitHub → QQ 私人通知
 
 用独立的 QQ 官方机器人，将 GitHub 消息私信给仓库负责人。
-目前每 **30 分钟**检查一次 [每日一题投稿仓库](https://github.com/greenthree/meiriyiti-contributions)；
+目前每 **5 分钟**检查一次 [每日一题投稿仓库](https://github.com/greenthree/meiriyiti-contributions)；
 发现新题投稿 PR 后发送作者、标题、状态和审核链接，同一 PR 只提醒一次。
 
 本仓库只维护通知工具。投稿仍在投稿仓库提交，审核和正式入库仍在每日一题仓库完成。
@@ -41,7 +41,7 @@
 
 ## 运行与隐私
 
-- 定时检查约每 30 分钟一次，GitHub 排队可能造成延迟。
+- 定时检查约每 5 分钟一次，GitHub 排队可能造成延迟；这是计划间隔，不保证 5 分钟内送达。
   公开仓库使用标准 GitHub 托管 Linux runner 的 [Actions 分钟免费](https://docs.github.com/en/billing/concepts/product-billing/github-actions)。
 - 只读取公开 PR 元数据和文件路径，不下载或执行投稿代码；查询投稿 API 不携带通知仓库的写入令牌。
 - 带密钥的通知任务只由定时器或维护者手动触发，始终使用 `main` 代码。
