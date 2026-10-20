@@ -1,0 +1,56 @@
+name: GitHub QQ Notifications
+
+on:
+  schedule:
+    - cron: '17,47 * * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: '预览当前未关闭投稿，不发送或修改状态'
+        type: boolean
+        default: false
+      test_message:
+        description: '仅向本人发送一条测试私信'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: github-qq-notifications
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    if: github.event_name == 'workflow_dispatch' || vars.QQ_GITHUB_NOTIFY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install requests==2.34.2
+      - name: Check submissions and send private messages
+        env:
+          QQ_GITHUB_BOT_APPID: ${{ secrets.QQ_GITHUB_BOT_APPID }}
+          QQ_GITHUB_BOT_SECRET: ${{ secrets.QQ_GITHUB_BOT_SECRET }}
+          QQ_GITHUB_USER_OPENID: ${{ secrets.QQ_GITHUB_USER_OPENID }}
+          QQ_GITHUB_SANDBOX: ${{ vars.QQ_GITHUB_SANDBOX || 'false' }}
+          GITHUB_TOKEN: ${{ github.token }}
+          NOTIFY_STATE_BRANCH: notification-state
+          DRY_RUN: ${{ inputs.dry_run }}
+          TEST_MESSAGE: ${{ inputs.test_message }}
+        run: |
+          args=()
+          if [ "$DRY_RUN" = "true" ]; then
+            args+=(--dry-run)
+          fi
+          if [ "$TEST_MESSAGE" = "true" ]; then
+            args+=(--test)
+          fi
+          python scripts/notify_github.py "${args[@]}"
