@@ -24,5 +24,10 @@
     "pr": 11,
     "kind": "not-submission",
     "head": "ebb3fb9be9aa38d444719287185d6f746d265079"
+  },
+  "49c2e3050371d938cbf4daed55b897f8f245f9468c4ef6d00eeaa7a12cfcf9b9": {
+    "status": "pending",
+    "pr": 12,
+    "kind": "submission"
   }
 }
